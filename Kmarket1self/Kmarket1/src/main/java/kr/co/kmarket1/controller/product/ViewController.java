@@ -20,7 +20,7 @@ public class ViewController extends HttpServlet{
 	}
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		RequestDispatcher dispatcher = req.getRequestDispatcher("/product/cart.jsp");
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/product/view.jsp");
 		dispatcher.forward(req, resp);
 	}
 	@Override

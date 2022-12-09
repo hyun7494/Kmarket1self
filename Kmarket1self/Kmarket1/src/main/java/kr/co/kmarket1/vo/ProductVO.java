@@ -1,6 +1,7 @@
 package kr.co.kmarket1.vo;
 
 public class ProductVO {
+	private int prodNo;
 	private int prodCate1;
 	private int prodCate2;
 	private String prodName;
@@ -28,6 +29,12 @@ public class ProductVO {
 	private String ip;
 	private String rdate;
 	
+	public int getProdNo() {
+		return prodNo;
+	}
+	public void setProdNo(int prodNo) {
+		this.prodNo = prodNo;
+	}
 	public int getProdCate1() {
 		return prodCate1;
 	}
@@ -39,6 +46,9 @@ public class ProductVO {
 	}
 	public void setProdCate2(int prodCate2) {
 		this.prodCate2 = prodCate2;
+	}
+	public void setProdCate2(String prodCate2) {
+		this.prodCate2 = Integer.parseInt(prodCate2);
 	}
 	public String getProdName() {
 		return prodName;
@@ -184,5 +194,6 @@ public class ProductVO {
 	public void setRdate(String rdate) {
 		this.rdate = rdate;
 	}
+	
 
 }

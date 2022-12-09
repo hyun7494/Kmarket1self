@@ -91,7 +91,7 @@ color: #41ab47;
 text-decoration: underline;
 }
 
-/* aside index 복붙해옴*/
+/* aside index 복붙해옴 --aside best 시작 --*/
 main > aside > .best {
     width: 215px;
     height: auto;
@@ -217,7 +217,7 @@ main > aside > .best {
     background: url("./img/ico_freeshipping.gif") no-repeat;
     }
 
-
+/* aside index 복붙해옴 --aside best 끝 --*/
 
 main > section {
     float: right;
