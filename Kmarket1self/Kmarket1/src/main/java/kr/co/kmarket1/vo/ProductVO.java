@@ -41,6 +41,9 @@ public class ProductVO {
 	public void setProdCate1(int prodCate1) {
 		this.prodCate1 = prodCate1;
 	}
+	public void setProdCate1(String prodCate1) {
+		this.prodCate1 = Integer.parseInt(prodCate1);
+	}
 	public int getProdCate2() {
 		return prodCate2;
 	}

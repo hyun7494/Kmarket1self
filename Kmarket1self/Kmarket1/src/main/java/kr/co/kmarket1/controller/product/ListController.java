@@ -47,39 +47,17 @@ public class ListController extends HttpServlet{
 		
 		// 전체 게시물 갯수
 		/* prodCate2 형변환 해야함*/
-		total = service.selectCountTotal(prodCate2);
-		
-		// 마지막 페이지 번호
-		lastPageNum = service.getLastPageNum(total);
-		
-		// 페이지 그룹 시작, 끝
-		int[] result = service.getPageGroupNum(currentPage, lastPageNum);
-		currentPageGroup = result[0];
-		pageGroupStart = result[1];
-		pageGroupEnd = result[2];
-		
-		pageStartNum = total - start +1;
-		
-		req.setAttribute("start", start);
-		req.setAttribute("total", total);
-		req.setAttribute("lastPageNum", lastPageNum);
-		req.setAttribute("currentPage", currentPage);
-		req.setAttribute("currentPageGroup", currentPageGroup);
-		req.setAttribute("pageGroupStart", pageGroupStart);
-		req.setAttribute("pageGroupEnd", pageGroupEnd);
-		req.setAttribute("pageStartNum", pageStartNum);
-		
+		total = service.selectCountTotal(prodCate1, prodCate2);
+
 		req.setAttribute("prodCate1", prodCate1);
 		req.setAttribute("prodCate2", prodCate2);
-
 		
 		// ProductDAO 객체 생성
 		ProductDAO dao = ProductDAO.getInstance();
 		ProductService service = ProductService.INSTANCE;
 		
 		// 상품 목록 가져오기
-		List<ProductVO> products = dao.selectProducts(prodCate2, start);
-
+		List<ProductVO> products = dao.selectProducts(prodCate1, prodCate2);
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/product/list.jsp");
 		dispatcher.forward(req, resp);

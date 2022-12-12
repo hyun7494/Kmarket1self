@@ -7,28 +7,61 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import kr.co.kmarket1.db.DBHelper;
+
+import kr.co.kmarket1.db.MainSQL;
+import kr.co.kmarket1.vo.Cate1VO;
+
 import kr.co.kmarket1.db.ProductSQL;
 import kr.co.kmarket1.vo.ProductVO;
 
 public class ProductDAO extends DBHelper{
-	
-	Logger logger = LoggerFactory.getLogger(this.getClass());
-
-	
 	private static ProductDAO instance = new ProductDAO();
 	public static ProductDAO getInstance() {
 		return instance;
 	}
+
+	
 	private ProductDAO() {}
 	
-	public List<ProductVO> selectProducts(String prodCate2, int start) {
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	public List<Cate1VO> selectCate1(String c1Name) {
+		
+		List<Cate1VO> cate1s = new ArrayList<>();
+		
+		try {
+			logger.info("selectCate1 start...");
+			
+			conn = getConnection();
+			psmt = conn.prepareStatement(MainSQL.SELECT_CATE1);
+			psmt.setString(1, c1Name);
+			
+			rs = psmt.executeQuery();
+			
+			while(rs.next()) {
+				Cate1VO cate1 = new Cate1VO();
+				cate1.setCate1(rs.getInt(1));
+				cate1.setC1Name(rs.getString(2));
+				cate1s.add(cate1);
+				
+			}
+			close();
+		}catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		logger.debug("cate1 : " + cate1s);
+		return cate1s;
+	}
+	
+	
+	public List<ProductVO> selectProducts(String prodCate1, String prodCate2) {
 		List<ProductVO> products = new ArrayList<>();
 		try {
 			logger.info("selectProducts start...");
 			conn = getConnection();
 			psmt = conn.prepareStatement(ProductSQL.SELECT_PRODUCTS);
-			psmt.setString(1, prodCate2);
-			psmt.setInt(2, start);
+			psmt.setString(1, prodCate1);
+			psmt.setString(2, prodCate2);
 			
 			rs = psmt.executeQuery();
 			while(rs.next()) {
@@ -69,16 +102,19 @@ public class ProductDAO extends DBHelper{
 		}
 		return products;
 	}
-	public int selectCountTotal(String prodCate2) {
+	public int selectCountTotal(String prodCate1, String prodCate2) {
 		
 		int total = 0;
 		
 		try {
 			logger.info("selectCountTotal start...");
 			conn = getConnection();
-			stmt = conn.createStatement();
+			psmt = conn.prepareStatement(ProductSQL.SELECT_COUNT_TOTAL);
+			psmt.setString(1, prodCate1);
+			psmt.setString(2, prodCate2);
 			
-			rs = stmt.executeQuery(ProductSQL.SELECT_COUNT_TOTAL);
+			rs = psmt.executeQuery();
+
 			
 			if(rs.next()) {
 				total = rs.getInt(1);
@@ -91,6 +127,9 @@ public class ProductDAO extends DBHelper{
 		
 		return total;		
 	}
+
+
 	
+
 	
 }

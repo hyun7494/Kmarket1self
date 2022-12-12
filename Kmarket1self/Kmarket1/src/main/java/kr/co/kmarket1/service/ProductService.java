@@ -8,8 +8,8 @@ public enum ProductService {
 	
 	private ProductDAO dao = ProductDAO.getInstance();
 	
-	public int selectCountTotal(String prodCate2) {
-		return dao.selectCountTotal(prodCate2);
+	public int selectCountTotal(String prodCate1, String prodCate2) {
+		return dao.selectCountTotal(prodCate1, prodCate2);
 	}
 	
 	// 마지막 페이지 번호
@@ -24,18 +24,18 @@ public enum ProductService {
 			return lastPageNum;
 		}
 		
-	// 페이지 그룹 시작, 끝
-	public int[] getPageGroupNum(int currentPage, int lastPageNum) {
-		int currentPageGroup = (int) Math.ceil(currentPage /10.0);
-		int pageGroupStart = (currentPageGroup -1)*10 + 1;
-		int pageGroupEnd = currentPageGroup *10;
-		
-		if(pageGroupEnd > lastPageNum) {
-			pageGroupEnd = lastPageNum;
+		// 페이지 그룹 시작,끝
+		public int[] getPageGroupNum(int currentPage, int lastPageNum) {
+			int currentPageGroup = (int) Math.ceil(currentPage /10.0);
+			int pageGroupStart = (currentPageGroup -1)*10 + 1;
+			int pageGroupEnd = currentPageGroup *10;
+			
+			if(pageGroupEnd > lastPageNum) {
+				pageGroupEnd = lastPageNum;
+			}
+			int[] result = {currentPageGroup, pageGroupStart, pageGroupEnd};
+			return result;
 		}
-		int[] result = {currentPageGroup, pageGroupStart, pageGroupEnd};
-		return result;
-	}
 	
 
 
