@@ -12,24 +12,75 @@
     <link rel="stylesheet" href="./css/product.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
+    	// 페이지 로딩때부터 판매가 * 1
+    $(document).ready(function(){
+    	var countnum = $('input[name = num]').val();
+    	var num = parseInt(countnum);
+    	var total = num * ${product.price * ((100 - product.discount)/100)};
+    	$('input[name=total]').attr('value',total);
+	});
+    $(function(){
+    	// 감소 버튼 클릭시----------------------------------------------------------------
+    	$('.decrease').click(function(){
+    	var countnum = $('input[name = num]').val();
+    	if(countnum > 1){
+    	countnum--;
+    	}
+    	var num = parseInt(countnum);
+    	$('input[name=num]').attr('value',num);
+    	var total = num * ${product.price * ((100 - product.discount)/100)};
+    	$('input[name=total]').attr('value',total);
+    	});
+
+    	//증가 버튼 클릭시------------------------------------------------------------------
+    	$('.increase').click(function(){
+    	var countnum = $('input[name = num]').val();
+    	countnum++;
+    	var num = parseInt(countnum);
+    	$('input[name=num]').attr('value',num);
+    	var total = num * ${product.price * ((100 - product.discount)/100)};
+    	$('input[name=total]').attr('value',total);
+    	});
+    	//장바구니 버튼 클릭시-----------------------------------------------------------------
+    	
+    	//리뷰가 있을 시 리뷰가 없다는 멘트 지우기
     	$(function(){
-    		// count * 가격 해서 총 금액 보여주기
-    		// count 감소
-    		$(.decrease).click(function(){
-    			while('[name="num"]'){
-    				$('[name="num"]'-1)
-    				alert('되나?');
+    		if('${reviews}' != null){
+    			$('.empty').hide();
+    		}
+    	});
+    	/* view에서 장바구니로 데이터 넘기기
+    	$('.cart').click(function(){
+    		let jsonData = {
+    				"prodNo": prodNo,
+    				"count": num,
+    				"price": price,
+    				"discount": discount,
+    				"point": point,
+    				"delivery": delivery,
+    				"total": total,
+    				"rdate": rdate
+    		};
+    		$.ajax({
+    			url: '/Kmarket1/product/view.do'
+    			method: 'POST',
+    			data: jsonData,
+    			dataType: 'json',
+    			success: function(data){
+    				alert('장바구니에 상품이 추가되었습니다');
     			}
     		});
-    		
-    		// count 증가
-			$(.increase).click(function(){
-    			
-    		});
-    		
-    		//마지막
     	});
+    	*/
+    	// 리뷰 페이징
+    	$('.num').click(function(){
+    		alert(${num});
+    	});
+    	//
+    });
     </script>
+    <style>
+    </style>
 </head>
 <body>
     <div id="wrapper">
@@ -44,7 +95,7 @@
             </div>
             <div class="logo">
                 <div>
-                    <a href="#"><img src="./img/header_logo.png" alt="Kmarket" width="180px" height="49px"></a>
+                    <a href="/Kmarket1/"><img src="./img/header_logo.png" alt="Kmarket" width="180px" height="49px"></a>
                     <form action="#">
                         <input type="text" name="keyword">
                         <button>
@@ -149,6 +200,7 @@
                         <nav>
                             <h1>${product.seller}</h1>
                             <h2>상품번호 : ${product.prodNo}</h2>
+                            <input type="hidden" ${product.rdate}>
                         </nav>
                         <nav>
                             <h3>${product.prodName}</h3>
@@ -177,7 +229,7 @@
                             </c:otherwise>
                             </c:choose>
                             </span>
-                            <span class="arrival">모레(금) 7/8 도착예정</span>
+                            <span class="arrival">모레(${koreanDOW}) ${formatedNow} 도착예정</span>
                             <span class="desc">본 상품은 국내배송만 가능합니다.</span>
                         </nav>
                         <nav>
@@ -194,7 +246,7 @@
                             <button class="increase"></button>
                         </div>
                         <div class="total">
-                            <span>35,000</span>
+                            <span><input type="text" name="total" value"" readonly"></span>
                             <em>총 상품금액</em>
                         </div>
                         <div class="button">
@@ -315,6 +367,31 @@
                         <h1>상품리뷰</h1>
                     </nav>
                     <ul>
+                    	<li>
+                    		<div class="empty">
+	                    		<h4>등록된 리뷰가 없습니다</h4>
+	                    		<h4>구매 후 첫 리뷰를 남겨주세요</h4>
+                    		</div>
+                    	</li>
+                    </ul>
+                    <ul>
+                    <!-- 여기 반복문 써야할듯 -->
+                    <!-- 
+                    	<c:forEach var="comment" items="${comments}">
+                     <li>
+                            <div>
+                                <h5 class="rating star1">상품평</h5>
+                                <span>seo******	2018-07-10</span>
+                            </div>
+                            <h3>상품명1/BLUE/L</h3>
+                            <p>
+                                가격대비 정말 괜찮은 옷이라 생각되네요 핏은 음...제가 입기엔 어깨선이 맞고 루즈핏이라 하기도 좀 힘드네요.
+                                아주 약간 루즈한정도...?그래도 이만한 옷은 없다고 봅니다 깨끗하고 포장도 괜찮고 다음에도 여기서 판매하는
+                                제품들을 구매하고 싶네요 정말 만족하고 후기 남깁니다 많이 파시길 바래요 ~ ~ ~
+                            </p>
+                        </li>
+                    </c:forEach>
+                     -->
                         <li>
                             <div>
                                 <h5 class="rating star1">상품평</h5>
@@ -376,7 +453,7 @@
                             </p>
                         </li>
                     </ul>    
-                <!-- 상품목록 페이지번호 -->
+                 <!-- 상품목록 페이지번호 -->
               <div class="paging">
                 <span class="prev">
                   <a href="#"><&nbsp;이전</a>
