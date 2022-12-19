@@ -1,7 +1,6 @@
-package kr.co.kmarket1.controller.cs;
+package kr.co.kmarket1;
 
-import java.io.IOException;
-import java.util.List;
+public class IndexController {
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,14 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.co.kmarket1.service.CsService;
-import kr.co.kmarket1.vo.CsArticleVO;
+import kr.co.kmarket1.dao.ProductDAO;
+import kr.co.kmarket1.service.MainService;
+import kr.co.kmarket1.vo.Cate1VO;
 
-
-@WebServlet("/cs/index.do")
+@WebServlet("/main/index.do")
 public class IndexController extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private CsService service = CsService.instance;
+	private MainService service = MainService.instance;
 
 	@Override
 	public void init() throws ServletException {
@@ -26,17 +25,10 @@ public class IndexController extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		
-		String pg = req.getParameter("pg");
-
-		List<CsArticleVO> notices = service.selectNotices();
-		List<CsArticleVO> faqs = service.selectFaq();
-		List<CsArticleVO> qnas = service.selectQnas();
+		List<Cate1VO> cates = service.selectCate1();
+		req.setAttribute("cates", cates);
 		
-		req.setAttribute("notices", notices);
-		req.setAttribute("faqs", faqs);
-		req.setAttribute("qnas", qnas);
-		
-		RequestDispatcher dispatcher = req.getRequestDispatcher("/cs/index.jsp");
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/index.jsp");
 		dispatcher.forward(req, resp);
 		
 	}
@@ -44,6 +36,5 @@ public class IndexController extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 	}
-	
 	
 }

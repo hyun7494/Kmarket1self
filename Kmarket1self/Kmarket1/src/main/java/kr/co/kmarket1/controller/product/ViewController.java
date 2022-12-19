@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import kr.co.kmarket1.service.ProductService;
+import kr.co.kmarket1.vo.ProductReviewVO;
 import kr.co.kmarket1.vo.ProductVO;
 
 @WebServlet("/product/view.do")
@@ -82,7 +83,6 @@ public class ViewController extends HttpServlet{
         req.setAttribute("koreanDOW", koreanDOW);
 
         // 리뷰 들고오기
-        String pgr = req.getParameter("pgr");
         int currentPage = 1;
 		int start;
 		int total = 0;
@@ -92,19 +92,19 @@ public class ViewController extends HttpServlet{
 		int pageGroupEnd;
 		int pageStartNum;
         
-		if(pgr != null) {
-			currentPage = Integer.parseInt(pgr);
+		if(pg != null) {
+			currentPage = Integer.parseInt(pg);
 		}
-		start = (currentPage - 1)*10;
+		start = (currentPage - 1)*5;
 		
 		// 전체 게시물 갯수
 		total = service.selectReviewCountTotal(prodNo);
 		
 		// 마지막 페이지 번호
-		lastPageNum = service.getLastPageNum(total);
+		lastPageNum = service.getReviewLastPageNum(total);
 		
 		// 페이지 그룹 스타트, 엔드
-		int[] result = service.getPageGroupNum(currentPage, lastPageNum);
+		int[] result = service.getReviewPageGroupNum(currentPage, lastPageNum);
 		currentPageGroup = result[0];
 		pageGroupStart = result[1];
 		pageGroupEnd = result[2];
@@ -120,11 +120,11 @@ public class ViewController extends HttpServlet{
 		req.setAttribute("pageGroupEnd", pageGroupEnd);
 		req.setAttribute("pageStartNum", pageStartNum);
 		
-		req.setAttribute("pgr", pgr);
+		req.setAttribute("pg", pg);
         
-		List<ProductVO> comments = null;
-		comments = service.selectProductComments(prodNo);
-        req.setAttribute("connents", comments);
+		List<ProductReviewVO> reviews = null;
+		reviews = service.selectProductReviews(prodNo, start);
+        req.setAttribute("reviews", reviews);
 
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/product/view.jsp");
 		dispatcher.forward(req, resp);
