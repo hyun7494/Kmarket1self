@@ -3,6 +3,7 @@ package kr.co.kmarket1.service;
 import java.util.List;
 
 import kr.co.kmarket1.dao.ProductDAO;
+import kr.co.kmarket1.vo.ProductCartVO;
 import kr.co.kmarket1.vo.ProductReviewVO;
 import kr.co.kmarket1.vo.ProductVO;
 
@@ -101,12 +102,10 @@ public enum ProductService {
 		}
 		
 		
-		/*
 		// cart에 상품 추가
-		public ProductVO insertProductCart() {
-			return dao.insertProductCart();
+		public ProductCartVO insertProductCart(String uid, int prodNo, int count, int price, int discount, int point, int delivery, int total, String rdate) {
+			return dao.insertProductCart(uid, prodNo, count, price, discount, point, delivery, total, rdate);
 		};
-		*/
 		
 	
 

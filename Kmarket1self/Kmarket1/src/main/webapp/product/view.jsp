@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -53,7 +56,8 @@
 			let point = $('input[name=point]').val();
 			let delivery = $('input[name=delivery]').val();
 			let total = $('input[name=total]').val();
-			/* 여기부터 하자 아직 못했다*/
+			let rdate = $('input[name=rdate]').val();
+			
     		let jsonData = {
     				"uid": uid,
     				"prodNo": prodNo,
@@ -63,52 +67,27 @@
     				"point": point,
     				"delivery": delivery,
     				"total": total,
-    		};
-    		$.ajax({
-    			url: '/Kmarket1/product/view.do',
-    			type: 'post',
-    			data: jsonData,
-    			dataType: 'json',
-    			success: function(data){
-    				alert('장바구니에 상품이 추가되었습니다');
-    				return;
-    			}
-    		});
-    	});
-   	/* 주문하기 버튼 클릭시------------------------------------------------
-   	$('.order').click(function(){
-    		
-    		let uid = $('input[name=uid]').val();
-			let prodNo = $('input[name=prodNo]').val();
-			let count = $('input[name=num]').val();
-			let price = $('input[name=price]').val();
-			let discount = $('input[name=discount]').val();
-			let point = $('input[name=point]').val();
-			let delivery = $('input[name=delivery]').val();
-			let total = $('input[name=total]').val();
-			
-    		let jsonData = {
-    				"uid": uid,
-    				"prodNo": prodNo,
-    				"count": num,
-    				"price": price,
-    				"discount": discount,
-    				"point": point,
-    				"delivery": delivery,
-    				"total": total,
     				"rdate": rdate
     		};
+			console.log(jsonData);
+			
     		$.ajax({
-    			url: '/Kmarket1/product/order.do',
-    			type: 'post',
+    			url: '/Kmarket1/product/view.do',
+    			type: 'POST',
     			data: jsonData,
     			dataType: 'json',
-    			success: function(data){
-    				location.href = 'Kmarket1/product/order.do';
-    			}
+    			success: function(result) {
+    		          if (result) {
+    		              alert("완료");
+    		          } else {
+    		              alert("전송된 값 없음");
+    		          }
+    		      },
+    		      error: function() {
+    		          alert("에러 발생");
+    		      }
     		});
     	});
-   	*/
 	//
     });
     </script>
@@ -117,65 +96,7 @@
 </head>
 <body>
     <div id="wrapper">
-        <header>
-            <div class="top">
-                <div>
-		            <a href="/Kmarket1/member/login.jsp">로그인</a>
-		            <a href="/Kmarket1/member/join.jsp">회원가입</a>
-		            <a href="/Kmarket1/member/login.jsp">마이페이지</a>
-		            <a href="/Kmarket1/product/cart.jsp"><i class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp;장바구니</a>
-                </div>
-            </div>
-            <div class="logo">
-                <div>
-                    <a href="/Kmarket1/"><img src="./img/header_logo.png" alt="Kmarket" width="180px" height="49px"></a>
-                    <form action="#">
-                        <input type="text" name="keyword">
-                        <button>
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <div class="menu">
-                <div>
-                    <ul>
-                        <li>
-                            <a href="#">히트상품</a>
-                        </li>
-                        <li>
-                            <a href="#">추천상품</a>
-                        </li>
-                        <li>
-                            <a href="#">최신상품</a>
-                        </li>
-                        <li>
-                            <a href="#">인기상품</a>
-                        </li>
-                        <li>
-                            <a href="#">할인상품</a>
-                        </li>
-                    </ul>
-                    <ul>
-                        <li>
-                            <a href="#">쿠폰존</a>
-                        </li>
-                        <li>
-                            <a href="#">사용후기</a>
-                        </li>
-                        <li>
-                            <a href="#">개인결제</a>
-                        </li>
-                        <li>
-                            <a href="#">고객센터</a>
-                        </li>
-                        <li>
-                            <a href="#">FAQ</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </header>
+                <jsp:include page="/product/_header.jsp" />
         <main id="product">
             <aside>
                 <ul class="category">
@@ -224,6 +145,8 @@
             <section class="view">
                 <!-- 제목, 페이지 네비게이션 -->
 				<jsp:include page="./_${prodCate1}.jsp"/>
+				<input type="hidden" name="uid" value="${sessMember.uid}">
+				<input type="hidden" name="prodNo" value="${product.prodNo}">
                 <!-- 상품 전체 내용 -->
                 <article class="info">
                     <div class="image">
@@ -233,7 +156,7 @@
                         <nav>
                             <h1>${product.seller}</h1>
                             <h2>상품번호 : ${product.prodNo}</h2>
-                            <input type="hidden" ${product.rdate}>
+                            <input type="hidden" name="rdate" value="${product.rdate}">
                         </nav>
                         <nav>
                             <h3>${product.prodName}</h3>
@@ -245,14 +168,18 @@
                         <nav>
                             <div class="original-price">
                                 <del>${product.price}</del>
+                                <input type="hidden" name="price" value="${product.price}">
                                 <span>${product.discount}%</span>
+                                <input type="hidden" name="discount" value="${product.discount}">
                             </div>
                             <div class="discount-price">
-                                <ins>${product.price * ((100 - product.discount)/100)}</ins>
+                                <ins><fmt:formatNumber value="${product.price * ((100 - product.discount)/100)}" pattern="0"/></ins>
+                                <input type="hidden" name="point" value="${product.point}">
                             </div>
                         </nav>
                         <nav>
                             <span class="delivery">
+                            <input type="hidden" name="delivery" value="${product.delivery}">
                             <c:choose>
                             <c:when test="${product.delivery == 0}">
                             	무료배송

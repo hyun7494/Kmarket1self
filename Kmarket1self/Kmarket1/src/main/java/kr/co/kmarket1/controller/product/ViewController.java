@@ -1,6 +1,7 @@
 package kr.co.kmarket1.controller.product;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +16,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.JsonObject;
+
 import kr.co.kmarket1.service.ProductService;
+import kr.co.kmarket1.vo.ProductCartVO;
 import kr.co.kmarket1.vo.ProductReviewVO;
 import kr.co.kmarket1.vo.ProductVO;
 
@@ -131,7 +135,35 @@ public class ViewController extends HttpServlet{
 	}
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		/* ProductVO cart = service.insertProductCart(); */
+
+		String uid = req.getParameter("uid");
+		int prodNo = Integer.parseInt(req.getParameter("prodNo"));
+		int count = Integer.parseInt(req.getParameter("count"));
+		int price = Integer.parseInt(req.getParameter("price"));
+		int discount = Integer.parseInt(req.getParameter("discount"));
+		int point = Integer.parseInt(req.getParameter("point"));
+		int delivery = Integer.parseInt(req.getParameter("delivery"));
+		int total = Integer.parseInt(req.getParameter("total"));
+		String rdate = req.getParameter("rdate");
+		
+		resp.setCharacterEncoding("UTF-8");
+		
+		ProductCartVO cart = service.insertProductCart(uid, prodNo, count, price, discount, point, delivery, total, rdate);
+ 
+		JsonObject json = new JsonObject();
+		json.addProperty("uid", cart.getUid());
+		json.addProperty("prodNo", cart.getProdNo());
+		json.addProperty("count", cart.getCount());
+		json.addProperty("price", cart.getPrice());
+		json.addProperty("discount", cart.getDiscount());
+		json.addProperty("point", cart.getPoint());
+		json.addProperty("delivery", cart.getDelivery());
+		json.addProperty("total", cart.getTotal());
+		json.addProperty("rdate", cart.getRdate());
+
+		PrintWriter writer = resp.getWriter();
+		writer.print(json.toString());
+
 		
 	}
 }

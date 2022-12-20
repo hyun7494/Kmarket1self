@@ -32,7 +32,7 @@ public class ProductSQL {
 													+ "where `prodCate1`=? AND `prodCate2`=?";
 	
 	public static final String INSERT_PRODUCT_CART = "INSERT INTO `km_product_cart` set "
-													+ "`uid`=?, `prodNo`=?, `count`=?, `price`=?, `discount`=?, `point`=?, `delivery`=?, `total`=?, `rdate`=? )";
+													+ "`uid`=?, `prodNo`=?, `count`=?, `price`=?, `discount`=?, `point`=?, `delivery`=?, `total`=?, `rdate`=? ";
 	
 	public static final String SELECT_REVIEWS = "SELECT a.*, b.`prodName` FROM `km_product_review` AS a "
 												+"JOIN `km_product` as b ON a.prodNo = b.prodNo "
